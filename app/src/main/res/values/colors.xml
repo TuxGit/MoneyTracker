@@ -5,5 +5,9 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="textBackgroundColor">#84c0c5</color>
-    <color name="textColor">#fff</color>
+    <color name="textColor">#000</color>
+    <!--<color name="inputTextColor">#95989a</color>-->
+    <color name="hintTextColor">#95989a</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>
