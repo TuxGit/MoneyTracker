@@ -2,4 +2,7 @@
     <string name="app_name">Money Tracker</string>
 
     <string name="some_hello_text">Hello World!</string>
+
+    <string name="add_item_title">Новая запись</string>
+    <string name="currency_rubl">₽</string>
 </resources>
