@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/item_padding_horizontal"
+        android:paddingEnd="@dimen/item_padding_horizontal"
+        android:paddingTop="@dimen/item_padding_vertical"
+        android:paddingBottom="@dimen/item_padding_vertical"
+        android:background="@color/itemTitleColor"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        tools:text="Молоко dasdsad dasdasd sd dsadsad"/>
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/item_padding_horizontal"
+        android:paddingEnd="@dimen/item_padding_horizontal"
+        android:paddingTop="@dimen/item_padding_vertical"
+        android:paddingBottom="@dimen/item_padding_vertical"
+        android:background="@color/itemPriceColor"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:gravity="center"
+        tools:text="351р"/>
+
+</LinearLayout>
