@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,9 @@ public class ItemListFragment extends Fragment {
     private int type;
     private RecyclerView recycler;
     private ItemListAdapter adapter;
-    private static final String TAG = "ItemListFragment";
 
     public static ItemListFragment createItemListFragment(int type) {
         ItemListFragment fragment = new ItemListFragment();
-        Log.d(TAG, "Type=" + String.valueOf(type));
 
         Bundle bundle = new Bundle();
         bundle.putInt(ItemListFragment.TYPE_KEY, ItemListFragment.TYPE_INCOMES);
@@ -57,7 +54,7 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recycler = view.findViewById(R.id.list);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext())); // getActivity()
+        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
     }
 }

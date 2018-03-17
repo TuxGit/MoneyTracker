@@ -14,10 +14,9 @@ import java.util.List;
  * Created by tux on 16.03.2018.
  */
 class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHolder> {
-    private List<Record> data = new ArrayList<>(); //Collections.emptyList();
+    private List<Record> data = new ArrayList<>();
 
     public ItemListAdapter() {
-        // v3 - context, pass context in constructor
         createData();
     }
 
@@ -32,7 +31,6 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
     public void onBindViewHolder(ItemListAdapter.RecordViewHolder holder, int position) {
         Record record = data.get(position);
         holder.applyData(record);
-        // ((RecordViewHolder) holder).applyData(record); <- extends RecyclerView.Adapter {
     }
 
     @Override
@@ -63,7 +61,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
 
         public RecordViewHolder(View itemView) {
             super(itemView);
-            // v1 - context, get context from view
+
             context = itemView.getContext();
 
             title = itemView.findViewById(R.id.title);
@@ -75,26 +73,6 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
             title.setText(record.getTitle());
             price.setText(context.getString(R.string.item_price_format, String.valueOf(record.getPrice())));
 
-            // v2 - context, get context from child view
-            /*
-            title.getContext().getResources();
-            title.getRootView().getContext().getResources();
-
-            title.getContext().getResources().getString(R.string.currency_rubl)
-            title.getRootView().getContext().getResources().getString(R.string.currency_rubl)
-            */
-
-            // test string format
-            /*
-            price.setText(record.getPrice()); -> crash app
-            String s1 = String.format("dsad %d", 22);
-            String s2 = String.format("dsad %s", "dsa");
-            price.setText(String.format(Locale.getDefault(),"%1$d %2$s", record.getPrice(), resources.getString(R.string.currency_rubl)));
-
-            not work -> price.setText(String.format("%1$d %2$s", 11, R.string.currency_rubl));
-            price.setText(String.valueOf(record.getPrice()));
-            title.setText(R.string.some_string);
-            */
         }
     }
 }
