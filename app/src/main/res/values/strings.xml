@@ -7,5 +7,15 @@
     <string name="currency_rubl">₽</string>
 
     <string name="add_item_list_title">Учёт бюджета</string>
-    <string name="item_price_format">"%1$d %2$s"</string>
+    <string name="item_price_format">%s &#x20bd;</string>
+
+    <!--<string name="tab_incomes">Доходы</string>-->
+    <!--<string name="tab_expenses">Расходы</string>-->
+    <!--<string name="tab_balance">Баланс</string>-->
+
+    <!--<string-array name="tab_title">-->
+        <!--<item>@string/tab_incomes</item>-->
+        <!--<item>@string/tab_expenses</item>-->
+        <!--<item>@string/tab_balance</item>-->
+    <!--</string-array>-->
 </resources>
