@@ -13,4 +13,6 @@
     <color name="itemPriceColor">#daa10c</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="light_blue_grey">#dbece6</color>
+    <color name="pale_teal_two">#95c9b8</color>
 </resources>
