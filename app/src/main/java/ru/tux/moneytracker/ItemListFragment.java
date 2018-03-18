@@ -9,22 +9,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ItemListFragment extends Fragment {
 
     private static final String TYPE_KEY = "type";
-    private static final int TYPE_UNKNOWN = -1;
-    public static final int TYPE_INCOMES = 1;
-    public static final int TYPE_EXPENSES = 2;
 
-    private int type;
+    private String type;
     private RecyclerView recycler;
     private ItemListAdapter adapter;
 
-    public static ItemListFragment createItemListFragment(int type) {
+    private Api api;
+
+    public static ItemListFragment createItemListFragment(String type) {
         ItemListFragment fragment = new ItemListFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(ItemListFragment.TYPE_KEY, ItemListFragment.TYPE_INCOMES);
+        bundle.putString(ItemListFragment.TYPE_KEY, type);
 
         fragment.setArguments(bundle);
         return fragment;
@@ -36,11 +41,13 @@ public class ItemListFragment extends Fragment {
         adapter = new ItemListAdapter();
 
         Bundle bundle = getArguments();
-        type = bundle.getInt(TYPE_KEY, TYPE_UNKNOWN);
+        type = bundle.getString(TYPE_KEY, Record.TYPE_UNKNOWN);
 
-        if (type == TYPE_UNKNOWN) {
+        if (type.equals(Record.TYPE_UNKNOWN)) {
             throw new IllegalArgumentException("Unknown type");
         }
+
+        api = ((App) getActivity().getApplication()).getApi();
     }
 
     @Nullable
@@ -56,5 +63,23 @@ public class ItemListFragment extends Fragment {
         recycler = view.findViewById(R.id.list);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
+
+        loadItems();
+    }
+
+    private void loadItems() {
+        Call<List<Record>> call = api.getItems(type);
+
+        call.enqueue(new Callback<List<Record>>() {
+            @Override
+            public void onResponse(Call<List<Record>> call, Response<List<Record>> response) {
+                adapter.setData(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Record>> call, Throwable t) {
+
+            }
+        });
     }
 }
