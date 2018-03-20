@@ -1,8 +1,14 @@
 package ru.tux.moneytracker;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,12 +22,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ItemListFragment extends Fragment {
+    private static final String TAG = "ItemListFragment";
 
     private static final String TYPE_KEY = "type";
+
+    private static final int ADD_ITEM_REQUEST_CODE = 101;
 
     private String type;
     private RecyclerView recycler;
     private ItemListAdapter adapter;
+
+    private FloatingActionButton fab;
+    private SwipeRefreshLayout refresh;
 
     private Api api;
 
@@ -64,6 +76,32 @@ public class ItemListFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
 
+        fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // неявный intent
+               // Intent intent = new Intent();
+               // intent.setAction(Intent.ACTION_VIEW);
+               // intent.setData(Uri.parse("https://pikabu.ru"));
+               // startActivity(intent);
+
+                // явный intent
+                Intent intent = new Intent(getContext(), AddItemActivity.class);
+                intent.putExtra(AddItemActivity.TYPE_KEY, type);
+                startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
+            }
+        });
+
+        refresh = view.findViewById(R.id.refresh);
+        refresh.setColorSchemeColors(Color.BLUE, Color.CYAN, Color.GREEN);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadItems();
+            }
+        });
+
         loadItems();
     }
 
@@ -74,12 +112,28 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Record>> call, Response<List<Record>> response) {
                 adapter.setData(response.body());
+                refresh.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Record>> call, Throwable t) {
-
+                refresh.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Record record = data.getParcelableExtra("record");
+            // adapter.addItem(record);
+            // test
+            // int pos = 0;
+            adapter.addItem(record, true);
+            recycler.smoothScrollToPosition(0);
+            //
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

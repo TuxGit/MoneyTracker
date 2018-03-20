@@ -21,6 +21,18 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
         notifyDataSetChanged();
     }
 
+    public void addItem(Record record, boolean atBegin) {
+        // data.add(0, record);
+        // notifyItemInserted(0);
+
+        // notifyDataSetChanged();
+
+        if (atBegin)
+            data.add(0, record);
+        else
+            data.add(record);
+    }
+
     @Override
     public ItemListAdapter.RecordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
