@@ -27,10 +27,13 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
 
         // notifyDataSetChanged();
 
-        if (atBegin)
+        if (atBegin) {
             data.add(0, record);
-        else
+            notifyItemInserted(0);
+        } else {
             data.add(record);
+            notifyItemInserted(data.size());
+        }
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,13 +126,33 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Record record = data.getParcelableExtra("record");
+            final Record record = data.getParcelableExtra("record");
             // adapter.addItem(record);
-            // test
-            // int pos = 0;
-            adapter.addItem(record, true);
-            recycler.smoothScrollToPosition(0);
-            //
+
+            // test - POST request
+            Call<Void> callCreate = api.createItem(record);
+            callCreate.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.d(TAG, response.headers().toString());
+                    if (response.isSuccessful()) {
+                        // int pos = 0;
+                        adapter.addItem(record, true);
+                        // show added item by scrolling top
+                        // recycler.smoothScrollToPosition(0); // error -> RecyclerView: Passed over target position while smooth scrolling.
+                        recycler.scrollToPosition(0);
+
+                        Log.d(TAG, "onResponse: success, code=" + String.valueOf(response.code()));
+                    } else {
+                        Log.d(TAG, "onResponse: error, code=" + String.valueOf(response.code()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.d(TAG, "onFailure: createItem");
+                }
+            });
         }
 
         super.onActivityResult(requestCode, resultCode, data);
