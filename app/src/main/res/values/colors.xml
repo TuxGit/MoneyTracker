@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="theme_color_primary">#95c9b8</color>
+    <color name="theme_color_primary_dark">#87b5a6</color>
+    <color name="theme_color_accent">#1ca498</color>
 
-    <color name="textBackgroundColor">#84c0c5</color>
-    <color name="textColor">#000</color>
-    <!--<color name="inputTextColor">#95989a</color>-->
-    <color name="hintTextColor">#95989a</color>
+    <color name="item">#fcc31e</color>
+    <color name="item_dark">#daa10c</color>
+    <color name="tab_indicator">#ffff8d</color>
+    <color name="text_hint">#95989a</color>
 
-    <color name="itemTitleColor">#fcc31e</color>
-    <color name="itemPriceColor">#daa10c</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
 
-    <color name="white">#FFFFFF</color>
-    <color name="light_blue_grey">#dbece6</color>
-    <color name="pale_teal_two">#95c9b8</color>
 </resources>
