@@ -27,13 +27,13 @@ public class ItemListFragment extends Fragment {
 
     private static final String TYPE_KEY = "type";
 
-    private static final int ADD_ITEM_REQUEST_CODE = 101;
+    public static final int ADD_ITEM_REQUEST_CODE = 101;
 
     private String type;
     private RecyclerView recycler;
     private ItemListAdapter adapter;
 
-    private FloatingActionButton fab;
+    // private FloatingActionButton fab;
     private SwipeRefreshLayout refresh;
 
     private Api api;
@@ -77,22 +77,22 @@ public class ItemListFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
 
-        fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // неявный intent
-               // Intent intent = new Intent();
-               // intent.setAction(Intent.ACTION_VIEW);
-               // intent.setData(Uri.parse("https://pikabu.ru"));
-               // startActivity(intent);
-
-                // явный intent
-                Intent intent = new Intent(getContext(), AddItemActivity.class);
-                intent.putExtra(AddItemActivity.TYPE_KEY, type);
-                startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
-            }
-        });
+        // fab = view.findViewById(R.id.fab);
+        // fab.setOnClickListener(new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //        // неявный intent
+        //        // Intent intent = new Intent();
+        //        // intent.setAction(Intent.ACTION_VIEW);
+        //        // intent.setData(Uri.parse("https://pikabu.ru"));
+        //        // startActivity(intent);
+        //
+        //         // явный intent
+        //         Intent intent = new Intent(getContext(), AddItemActivity.class);
+        //         intent.putExtra(AddItemActivity.TYPE_KEY, type);
+        //         startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
+        //     }
+        // });
 
         refresh = view.findViewById(R.id.refresh);
         refresh.setColorSchemeColors(Color.BLUE, Color.CYAN, Color.GREEN);
@@ -127,6 +127,8 @@ public class ItemListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             final Record record = data.getParcelableExtra("record");
+
+            if (record.type.equals(type)) {
             // adapter.addItem(record);
 
             // test - POST request
@@ -153,6 +155,8 @@ public class ItemListFragment extends Fragment {
                     Log.d(TAG, "onFailure: createItem");
                 }
             });
+
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
