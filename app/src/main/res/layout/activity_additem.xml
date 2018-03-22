@@ -8,6 +8,21 @@
     android:background="@drawable/bg_pattern"
     tools:context="ru.tux.moneytracker.AddItemActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:id="@+id/toolbar"
+        android:background="@color/theme_color_primary"
+        android:layout_width="match_parent"
+        android:elevation="8dp"
+        android:layout_height="?android:attr/actionBarSize"/>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardUseCompatPadding="false"
+        card_view:cardElevation="4dp"
+        card_view:cardCornerRadius="0dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -21,10 +36,10 @@
         <EditText
             android:id="@+id/name"
             android:background="@null"
-            android:textColor="@color/textColor"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:hint="Название"
-            android:textColorHint="@color/hintTextColor"
+            android:textColorHint="@color/text_hint"
             android:maxLines="1"
             android:inputType="text"
             android:layout_weight="1"
@@ -35,10 +50,10 @@
             android:id="@+id/price"
             android:layout_marginStart="8dp"
             android:background="@null"
-            android:textColor="@color/textColor"
+            android:textColor="@color/black"
             android:textSize="21sp"
             android:hint="0"
-            android:textColorHint="@color/hintTextColor"
+            android:textColorHint="@color/text_hint"
             android:gravity="end"
             android:maxLines="1"
             android:inputType="number"
@@ -62,6 +77,8 @@
             android:layout_height="26dp" />
 
     </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
 

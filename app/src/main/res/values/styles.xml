@@ -3,16 +3,16 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/theme_color_primary</item>
+        <item name="colorPrimaryDark">@color/theme_color_primary_dark</item>
+        <item name="colorAccent">@color/theme_color_accent</item>
     </style>
 
-    <style name="TabLayout" parent="Widget.Design.TabLayout">
+    <!--<style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabBackground">@color/pale_teal_two</item>
         <item name="tabTextColor">@color/light_blue_grey</item>
         <item name="tabSelectedTextColor">@color/white</item>
         <item name="tabIndicatorColor">#F7FD97</item>
-    </style>
+    </style>-->
 
 </resources>
