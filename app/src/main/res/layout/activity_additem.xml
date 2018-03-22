@@ -16,6 +16,14 @@
         android:elevation="8dp"
         android:layout_height="?android:attr/actionBarSize"/>
 
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardUseCompatPadding="false"
+        card_view:cardElevation="4dp"
+        card_view:cardCornerRadius="0dp">
+
     <LinearLayout
         android:orientation="horizontal"
         android:background="@color/white"
@@ -69,6 +77,8 @@
             android:layout_height="26dp" />
 
     </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
 
