@@ -3,10 +3,8 @@ package ru.tux.moneytracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +24,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.tux.moneytracker.dialog.ConfirmationDialog;
+import ru.tux.moneytracker.dialog.ConfirmationDialogListener;
 
 public class ItemListFragment extends Fragment { // implements ItemListAdapterListener
     private static final String TAG = "ItemListFragment";
@@ -239,7 +239,8 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.remove:
-                    removeSelectedItems();
+                    // removeSelectedItems();
+                    showDialog();
                     break;
             }
             return false;
@@ -251,4 +252,24 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
             actionMode = null;
         }
     };
+
+
+    /*     DIALOG     */
+
+    private void showDialog() {
+        ConfirmationDialog dialog = new ConfirmationDialog();
+        dialog.setListener(new ConfirmationDialogListener() {
+            @Override
+            public void onPositiveClicked(ConfirmationDialog dialog) {
+                removeSelectedItems();
+            }
+
+            @Override
+            public void onNegativeClicked(ConfirmationDialog dialog) {
+                // dialog.dismiss();
+            }
+        });
+        dialog.show(getFragmentManager(), "ConfirmationDialog");
+    }
+
 }
