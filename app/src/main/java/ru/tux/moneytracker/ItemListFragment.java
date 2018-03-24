@@ -3,16 +3,19 @@ package ru.tux.moneytracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +24,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.tux.moneytracker.dialog.ConfirmationDialog;
+import ru.tux.moneytracker.dialog.ConfirmationDialogListener;
 
 public class ItemListFragment extends Fragment {
     private static final String TAG = "ItemListFragment";
@@ -33,7 +38,6 @@ public class ItemListFragment extends Fragment {
     private RecyclerView recycler;
     private ItemListAdapter adapter;
 
-    // private FloatingActionButton fab;
     private SwipeRefreshLayout refresh;
 
     private Api api;
@@ -52,6 +56,7 @@ public class ItemListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ItemListAdapter();
+        adapter.setListener(new AdapterListener());
 
         Bundle bundle = getArguments();
         type = bundle.getString(TYPE_KEY, Record.TYPE_UNKNOWN);
@@ -76,23 +81,6 @@ public class ItemListFragment extends Fragment {
         recycler = view.findViewById(R.id.list);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
-
-        // fab = view.findViewById(R.id.fab);
-        // fab.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //        // неявный intent
-        //        // Intent intent = new Intent();
-        //        // intent.setAction(Intent.ACTION_VIEW);
-        //        // intent.setData(Uri.parse("https://pikabu.ru"));
-        //        // startActivity(intent);
-        //
-        //         // явный intent
-        //         Intent intent = new Intent(getContext(), AddItemActivity.class);
-        //         intent.putExtra(AddItemActivity.TYPE_KEY, type);
-        //         startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
-        //     }
-        // });
 
         refresh = view.findViewById(R.id.refresh);
         refresh.setColorSchemeColors(Color.BLUE, Color.CYAN, Color.GREEN);
@@ -161,4 +149,98 @@ public class ItemListFragment extends Fragment {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /*    ACTION MODE     */
+
+    ActionMode actionMode = null;
+
+    private void removeSelectedItems() {
+        // обходим элементы с конца для корректного удаления
+        for (int i = adapter.getSelectedItems().size() - 1; i >= 0; i--) {
+            adapter.remove(adapter.getSelectedItems().get(i));
+        }
+
+        actionMode.finish();
+    }
+
+    private class AdapterListener implements ItemListAdapterListener {
+
+        @Override
+        public void onItemClick(Record record, int position) {
+            if (isInActionMode()) {
+                toggleSelection(position);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(Record record, int position) {
+            if (isInActionMode()) {
+                return;
+            }
+
+            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+            toggleSelection(position);
+        }
+
+        private boolean isInActionMode () {
+            return actionMode != null;
+        }
+
+        private void toggleSelection(int position) {
+            adapter.toggleSelection(position);
+        }
+
+    }
+
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // actionMode = mode;
+            MenuInflater inflater = new MenuInflater(getContext());
+            inflater.inflate(R.menu.item_list_menu, menu);
+            return true;
+            // return false;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.remove:
+                    showDialog();
+                    break;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            adapter.clearSelections();
+            actionMode = null;
+        }
+    };
+
+
+    /*     DIALOG     */
+
+    private void showDialog() {
+        ConfirmationDialog dialog = new ConfirmationDialog();
+        dialog.setListener(new ConfirmationDialogListener() {
+            @Override
+            public void onPositiveClicked(ConfirmationDialog dialog) {
+                removeSelectedItems();
+            }
+
+            @Override
+            public void onNegativeClicked(ConfirmationDialog dialog) {
+                // dialog.dismiss();
+            }
+        });
+        dialog.show(getFragmentManager(), "ConfirmationDialog");
+    }
+
 }

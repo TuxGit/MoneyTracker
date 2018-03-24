@@ -1,12 +1,14 @@
 package ru.tux.moneytracker;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private TabLayout tabLayout;
 
     private FloatingActionButton fab;
+
+    private ActionMode actionMode = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,42 +61,42 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         });
 
-        Log.d(TAG, "onCreate");
+        // Log.d(TAG, "onCreate");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        Log.d(TAG, "onStart");
+        // Log.d(TAG, "onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.d(TAG, "onResume");
+        // Log.d(TAG, "onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Log.d(TAG, "onPause");
+        // Log.d(TAG, "onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        Log.d(TAG, "onStop");
+        // Log.d(TAG, "onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        Log.d(TAG, "onDestroy");
+        // Log.d(TAG, "onDestroy");
     }
 
     @Override
@@ -121,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 break;
             case ViewPager.SCROLL_STATE_DRAGGING:
             case ViewPager.SCROLL_STATE_SETTLING:
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
                 fab.setEnabled(false);
                 break;
         }
@@ -133,5 +140,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+
+        fab.hide();
+        actionMode = mode;
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+
+        fab.show();
+        actionMode = null;
     }
 }
