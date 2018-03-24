@@ -27,7 +27,7 @@ import retrofit2.Response;
 import ru.tux.moneytracker.dialog.ConfirmationDialog;
 import ru.tux.moneytracker.dialog.ConfirmationDialogListener;
 
-public class ItemListFragment extends Fragment { // implements ItemListAdapterListener
+public class ItemListFragment extends Fragment {
     private static final String TAG = "ItemListFragment";
 
     private static final String TYPE_KEY = "type";
@@ -38,7 +38,6 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
     private RecyclerView recycler;
     private ItemListAdapter adapter;
 
-    // private FloatingActionButton fab;
     private SwipeRefreshLayout refresh;
 
     private Api api;
@@ -57,7 +56,6 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ItemListAdapter();
-        // adapter.setListener(this);
         adapter.setListener(new AdapterListener());
 
         Bundle bundle = getArguments();
@@ -83,23 +81,6 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
         recycler = view.findViewById(R.id.list);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
-
-        // fab = view.findViewById(R.id.fab);
-        // fab.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //        // неявный intent
-        //        // Intent intent = new Intent();
-        //        // intent.setAction(Intent.ACTION_VIEW);
-        //        // intent.setData(Uri.parse("https://pikabu.ru"));
-        //        // startActivity(intent);
-        //
-        //         // явный intent
-        //         Intent intent = new Intent(getContext(), AddItemActivity.class);
-        //         intent.putExtra(AddItemActivity.TYPE_KEY, type);
-        //         startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
-        //     }
-        // });
 
         refresh = view.findViewById(R.id.refresh);
         refresh.setColorSchemeColors(Color.BLUE, Color.CYAN, Color.GREEN);
@@ -182,15 +163,6 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
         actionMode.finish();
     }
 
-    // @Override
-    // public void onItemClick(Record record, int position) {
-    //
-    // }
-    //
-    // @Override
-    // public void onItemLongClick(Record record, int position) {
-    //
-    // }
     private class AdapterListener implements ItemListAdapterListener {
 
         @Override
@@ -239,7 +211,6 @@ public class ItemListFragment extends Fragment { // implements ItemListAdapterLi
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.remove:
-                    // removeSelectedItems();
                     showDialog();
                     break;
             }
