@@ -9,10 +9,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment { // implements ItemListAdapterListener
     private static final String TAG = "ItemListFragment";
 
     private static final String TYPE_KEY = "type";
@@ -52,6 +57,8 @@ public class ItemListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ItemListAdapter();
+        // adapter.setListener(this);
+        adapter.setListener(new AdapterListener());
 
         Bundle bundle = getArguments();
         type = bundle.getString(TYPE_KEY, Record.TYPE_UNKNOWN);
@@ -161,4 +168,87 @@ public class ItemListFragment extends Fragment {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /*    ACTION MODE     */
+
+    ActionMode actionMode = null;
+
+    private void removeSelectedItems() {
+        // обходим элементы с конца для корректного удаления
+        for (int i = adapter.getSelectedItems().size() - 1; i >= 0; i--) {
+            adapter.remove(adapter.getSelectedItems().get(i));
+        }
+
+        actionMode.finish();
+    }
+
+    // @Override
+    // public void onItemClick(Record record, int position) {
+    //
+    // }
+    //
+    // @Override
+    // public void onItemLongClick(Record record, int position) {
+    //
+    // }
+    private class AdapterListener implements ItemListAdapterListener {
+
+        @Override
+        public void onItemClick(Record record, int position) {
+            if (isInActionMode()) {
+                toggleSelection(position);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(Record record, int position) {
+            if (isInActionMode()) {
+                return;
+            }
+
+            actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+            toggleSelection(position);
+        }
+
+        private boolean isInActionMode () {
+            return actionMode != null;
+        }
+
+        private void toggleSelection(int position) {
+            adapter.toggleSelection(position);
+        }
+
+    }
+
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // actionMode = mode;
+            MenuInflater inflater = new MenuInflater(getContext());
+            inflater.inflate(R.menu.item_list_menu, menu);
+            return true;
+            // return false;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.remove:
+                    removeSelectedItems();
+                    break;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            adapter.clearSelections();
+            actionMode = null;
+        }
+    };
 }

@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/theme_color_primary</item>
         <item name="colorPrimaryDark">@color/theme_color_primary_dark</item>
         <item name="colorAccent">@color/theme_color_accent</item>
+
+        <item name="actionModeBackground">@color/theme_color_primary</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <!--<style name="TabLayout" parent="Widget.Design.TabLayout">

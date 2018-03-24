@@ -6,6 +6,9 @@
 
     <color name="item">#fcc31e</color>
     <color name="item_dark">#daa10c</color>
+    <color name="item_selected">#985305</color>
+    <color name="item_shadow">#30303030</color>
+
     <color name="tab_indicator">#ffff8d</color>
     <color name="text_hint">#95989a</color>
 
