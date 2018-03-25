@@ -112,8 +112,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void initTabs() {
-        MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), this);
-        viewPager.setAdapter(adapter);
+        if (viewPager.getAdapter() == null) {
+            MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), this);
+            viewPager.setAdapter(adapter);
+        }
     }
 
     @Override
