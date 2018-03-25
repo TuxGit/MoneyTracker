@@ -28,4 +28,7 @@
     <string name="dialog_no_text">Нет</string>
 
     <string name="menu_remove_title">Удалить</string>
+
+    <string name="sign_in_text_btn">Войти</string>
+    <string name="app_description">Ваш незаменимый помощник \n в управлении бюджетом</string>
 </resources>
