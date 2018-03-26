@@ -54,7 +54,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
     @Override
     public void onBindViewHolder(ItemListAdapter.RecordViewHolder holder, int position) {
         Record record = data.get(position);
-        holder.applyData(record, position, listener, selections.get(position, null) != null);
+        holder.applyData(record, position, listener, selections.get(position, null) != null, holder);
     }
 
     @Override
@@ -128,7 +128,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
         }
 
         // bind
-        public void applyData(final Record record, final int position, final ItemListAdapterListener listener, boolean isSelected) {
+        public void applyData(final Record record, final int position, final ItemListAdapterListener listener, boolean isSelected, final RecyclerView.ViewHolder viewHolder) {
 
             title.setText(record.title);
             price.setText(context.getString(R.string.item_price_format, String.valueOf(record.price)));
@@ -137,7 +137,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onItemClick(record, position);
+                        listener.onItemClick(record, position, viewHolder);
                     }
                 }
             });
@@ -146,7 +146,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
                 @Override
                 public boolean onLongClick(View view) {
                     if (listener != null) {
-                        listener.onItemLongClick(record, position);
+                        listener.onItemLongClick(record, position, viewHolder);
                     }
                     // return false;
                     return true;

@@ -216,20 +216,24 @@ public class ItemListFragment extends Fragment {
     private class AdapterListener implements ItemListAdapterListener {
 
         @Override
-        public void onItemClick(Record record, int position) {
+        public void onItemClick(Record record, int position, RecyclerView.ViewHolder viewHolder) {
+            int pos = viewHolder.getAdapterPosition();
+
             if (isInActionMode()) {
-                toggleSelection(position);
+                toggleSelection(pos);
             }
         }
 
         @Override
-        public void onItemLongClick(Record record, int position) {
+        public void onItemLongClick(Record record, int position, RecyclerView.ViewHolder viewHolder) {
+            int pos = viewHolder.getAdapterPosition();
+
             if (isInActionMode()) {
                 return;
             }
 
             actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
-            toggleSelection(position);
+            toggleSelection(pos);
         }
 
         private boolean isInActionMode () {
