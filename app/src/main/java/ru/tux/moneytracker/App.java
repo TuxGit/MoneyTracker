@@ -18,7 +18,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.tux.moneytracker.Api;
+import ru.tux.moneytracker.api.Api;
 
 /**
  * Created by tux on 18/03/18.

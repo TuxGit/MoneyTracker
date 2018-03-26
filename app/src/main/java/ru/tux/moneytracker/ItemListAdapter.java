@@ -2,6 +2,7 @@ package ru.tux.moneytracker;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
     @Override
     public void onBindViewHolder(ItemListAdapter.RecordViewHolder holder, int position) {
         Record record = data.get(position);
-        holder.applyData(record, position, listener, selections.get(position, false));
+        holder.applyData(record, position, listener, selections.get(position, null) != null);
     }
 
     @Override
@@ -61,14 +62,23 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
         return data.size();
     }
 
-    private SparseBooleanArray selections = new SparseBooleanArray(); // оптимальнее, чем HashMap
+    // private SparseBooleanArray selections = new SparseBooleanArray(); // оптимальнее, чем HashMap
     // private HashMap<Integer, Boolean> selections = new HashMap<>();
+    private SparseArray<Record> selections = new SparseArray<>();
 
+    // public void toggleSelection(int position) {
+    //     if (selections.get(position, false)) {
+    //         selections.delete(position);
+    //     } else {
+    //         selections.put(position, true);
+    //     }
+    //     notifyItemChanged(position);
+    // }
     public void toggleSelection(int position) {
-        if (selections.get(position, false)) {
+        if (selections.get(position, null) != null) {
             selections.delete(position);
         } else {
-            selections.put(position, true);
+            selections.put(position, getRecordByPosition(position));
         }
         notifyItemChanged(position);
     }
@@ -80,6 +90,13 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
 
     int getSelectedItemCount() {
         return selections.size();
+    }
+
+    // getSelectedRecordByPosition
+
+    Record getRecordByPosition(int position) {
+        Record record = data.get(position);
+        return record;
     }
 
     List<Integer> getSelectedItems() {

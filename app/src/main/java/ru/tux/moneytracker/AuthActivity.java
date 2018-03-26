@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.Task;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.tux.moneytracker.Api;
+import ru.tux.moneytracker.api.Api;
 import ru.tux.moneytracker.api.AuthResult;
 
 
