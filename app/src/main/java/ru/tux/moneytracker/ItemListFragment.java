@@ -24,6 +24,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.tux.moneytracker.api.AddItemResult;
+import ru.tux.moneytracker.api.Api;
 import ru.tux.moneytracker.dialog.ConfirmationDialog;
 import ru.tux.moneytracker.dialog.ConfirmationDialogListener;
 
@@ -87,11 +89,14 @@ public class ItemListFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                adapter.clearSelections();
                 loadItems();
+                // Log.d(TAG, "onRefresh: loadItems()");
             }
         });
 
         loadItems();
+        // Log.d(TAG, "onViewCreated: loadItems()");
     }
 
     private void loadItems() {
@@ -111,39 +116,84 @@ public class ItemListFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            final Record record = data.getParcelableExtra("record");
+    private void addItem(final Record record) {
+        // POST request
+        Call<AddItemResult> callCreate = api.createItem(record);
+        callCreate.enqueue(new Callback<AddItemResult>() {
+            @Override
+            public void onResponse(Call<AddItemResult> call, Response<AddItemResult> response) {
+                // Log.d(TAG, response.headers().toString());
 
-            if (record.type.equals(type)) {
-            // adapter.addItem(record);
+                if (response.isSuccessful()) {
+                    record.id = response.body().id;
+                    adapter.addItem(record, true);
+                    // show added item by scrolling top
+                    // recycler.smoothScrollToPosition(0); // error -> RecyclerView: Passed over target position while smooth scrolling.
+                    recycler.scrollToPosition(0);
 
-            // test - POST request
-            Call<Void> callCreate = api.createItem(record);
-            callCreate.enqueue(new Callback<Void>() {
+                    Log.d(TAG, "onResponse: success, code=" + String.valueOf(response.code()));
+                } else {
+                    Log.d(TAG, "onResponse: error, code=" + String.valueOf(response.code()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AddItemResult> call, Throwable t) {
+                Log.d(TAG, "onFailure: createItem");
+            }
+        });
+    }
+
+    private void removeItems(final List<Integer> items) {
+        // todo - вынести в func callbacks
+        refresh.setRefreshing(true);
+
+        for (int i = items.size() - 1; i >= 0; i--) {
+            final int pos = items.get(i);
+            Record record = adapter.getRecordByPosition(pos);
+
+            final int finalI = i;
+            Call<Void> callRemove = api.removeItem(record.id);
+
+            callRemove.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.d(TAG, response.headers().toString());
+                    // Log.d(TAG, response.headers().toString());
                     if (response.isSuccessful()) {
-                        // int pos = 0;
-                        adapter.addItem(record, true);
-                        // show added item by scrolling top
-                        // recycler.smoothScrollToPosition(0); // error -> RecyclerView: Passed over target position while smooth scrolling.
-                        recycler.scrollToPosition(0);
+                        // --itemsCount;
+                        items.remove(finalI);
+                        if (items.size() == 0) {
+                            removeSelectedItems();
 
-                        Log.d(TAG, "onResponse: success, code=" + String.valueOf(response.code()));
+                            refresh.setRefreshing(false);
+                        }
+
+                        Log.d(TAG, "onResponse callRemove: success, code=" + String.valueOf(response.code()));
                     } else {
-                        Log.d(TAG, "onResponse: error, code=" + String.valueOf(response.code()));
+                        refresh.setRefreshing(false);
+
+                        Log.d(TAG, "onResponse callRemove: error, code=" + String.valueOf(response.code()));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Log.d(TAG, "onFailure: createItem");
+                    refresh.setRefreshing(false);
+
+                    Log.d(TAG, "onFailure callRemove");
                 }
             });
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Record record = data.getParcelableExtra("record");
+
+            // adapter.addItem(record);
+            if (record.type.equals(type)) {
+                addItem(record);
             }
         }
 
@@ -166,20 +216,24 @@ public class ItemListFragment extends Fragment {
     private class AdapterListener implements ItemListAdapterListener {
 
         @Override
-        public void onItemClick(Record record, int position) {
+        public void onItemClick(Record record, int position, RecyclerView.ViewHolder viewHolder) {
+            int pos = viewHolder.getAdapterPosition();
+
             if (isInActionMode()) {
-                toggleSelection(position);
+                toggleSelection(pos);
             }
         }
 
         @Override
-        public void onItemLongClick(Record record, int position) {
+        public void onItemLongClick(Record record, int position, RecyclerView.ViewHolder viewHolder) {
+            int pos = viewHolder.getAdapterPosition();
+
             if (isInActionMode()) {
                 return;
             }
 
             actionMode = ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
-            toggleSelection(position);
+            toggleSelection(pos);
         }
 
         private boolean isInActionMode () {
@@ -232,7 +286,12 @@ public class ItemListFragment extends Fragment {
         dialog.setListener(new ConfirmationDialogListener() {
             @Override
             public void onPositiveClicked(ConfirmationDialog dialog) {
-                removeSelectedItems();
+                // refresh.setRefreshing(true);
+
+                // массив с позициями элементов, которые выделены
+                List<Integer> items = adapter.getSelectedItems();
+
+                removeItems(items);
             }
 
             @Override
