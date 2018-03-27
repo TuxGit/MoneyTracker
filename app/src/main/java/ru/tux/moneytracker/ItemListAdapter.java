@@ -131,7 +131,7 @@ class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.RecordViewHol
         public void applyData(final Record record, final int position, final ItemListAdapterListener listener, boolean isSelected, final RecyclerView.ViewHolder viewHolder) {
 
             title.setText(record.title);
-            price.setText(context.getString(R.string.item_price_format, String.valueOf(record.price)));
+            price.setText(context.getString(R.string.price_format, record.price));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

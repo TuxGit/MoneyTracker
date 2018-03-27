@@ -28,4 +28,6 @@ public interface Api {
     @DELETE("items/remove")
     Call<Void> removeItem(@Query("id") int id);
 
+    @GET("balance")
+    Call<BalanceResult> balance();
 }
