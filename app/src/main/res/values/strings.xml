@@ -7,7 +7,8 @@
     <string name="currency_rubl">₽</string>
 
     <string name="add_item_list_title">Учёт бюджета</string>
-    <string name="item_price_format">%s &#x20bd;</string>
+    <!--<string name="item_price_format">%s &#x20bd;</string>-->
+    <string name="price_format">%1$d \u20bd</string>
 
     <string name="tab_incomes">Доходы</string>
     <string name="tab_expenses">Расходы</string>
@@ -31,4 +32,9 @@
 
     <string name="sign_in_text_btn">Войти</string>
     <string name="app_description">Ваш незаменимый помощник \n в управлении бюджетом</string>
+
+    <string name="balance_total_text">Ваш баланс</string>
+    <string name="balance_expense_text">Расход</string>
+    <string name="balance_income_text">Доход</string>
+
 </resources>
