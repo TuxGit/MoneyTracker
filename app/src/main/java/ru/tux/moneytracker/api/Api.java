@@ -19,6 +19,9 @@ public interface Api {
     @GET("auth")
     Call<AuthResult> auth(@Query("social_user_id") String userId);
 
+    @GET("logout")
+    Call<Void> logout();
+
     @GET("items")
     Call<List<Record>> getItems(@Query("type") String type);
 

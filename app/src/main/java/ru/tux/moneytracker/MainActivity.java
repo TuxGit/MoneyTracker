@@ -11,7 +11,13 @@ import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private static final String TAG = "MainActivity";
@@ -175,5 +181,50 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         fab.show();
         actionMode = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // return super.onOptionsItemSelected(item);
+        // Handle item selection
+        switch (item.getItemId()) {
+            // case R.id.about: {
+            //     Intent intent = new Intent(this, AboutActivity.class);
+            //     startActivity(intent);
+            //     return true;
+            // }
+            case R.id.logout: {
+                signOut();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void signOut() {
+        Intent intent = new Intent(this, AuthActivity.class);
+        intent.putExtra("methodName","signOut");
+        startActivity(intent);
+        // final MainActivity self = this;
+        // App app = (App) getApplication();
+        // app.getGoogleSignInClient().signOut()
+        //     .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        //         @Override
+        //         public void onComplete(@NonNull Task<Void> task) {
+        //             // ...
+        //             Intent intent = new Intent(self, AuthActivity.class);
+        //             startActivity(intent);
+        //         }
+        //     });
     }
 }

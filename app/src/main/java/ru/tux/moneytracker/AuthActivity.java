@@ -2,6 +2,7 @@ package ru.tux.moneytracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import retrofit2.Call;
@@ -55,6 +57,16 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
+        // ((App) getApplication()).setGoogleSignInClient(googleSignInClient);
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                String method = extras.getString("methodName", "");
+                if (method.equals("signOut")) {
+                    signOut();
+                }
+            }
+        }
     }
 
     @Override
@@ -75,6 +87,35 @@ public class AuthActivity extends AppCompatActivity {
         Log.i(TAG, "signIn: ");
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void signOut() {
+        // App app = (App) getApplication();
+        // app.getGoogleSignInClient().signOut();
+        googleSignInClient.signOut()
+            .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    // ...
+                    Log.d(TAG, "onComplete SignOut: ");
+
+                    api.logout().enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                ((App) getApplication()).clearAuthToken();
+                            } else {
+                                showError("Logout error");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            showError("Logout failed " + t.getMessage());
+                        }
+                    });
+                }
+            });
     }
 
     @Override
