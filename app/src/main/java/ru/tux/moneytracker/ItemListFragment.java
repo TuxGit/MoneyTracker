@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class ItemListFragment extends Fragment {
     private ItemListAdapter adapter;
 
     private SwipeRefreshLayout refresh;
+
+    private FloatingActionButton fab;
 
     private Api api;
 
@@ -94,6 +97,24 @@ public class ItemListFragment extends Fragment {
                 // Log.d(TAG, "onRefresh: loadItems()");
             }
         });
+
+        // test - work with FAB in child view
+        ViewGroup row = (ViewGroup) view.getParent().getParent();
+        fab = row.findViewById(R.id.fab);
+
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // Log.d(TAG, "onScrolled recycler: " + String.valueOf(dx) + " / " + String.valueOf(dy));
+                if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+                    fab.hide();
+                } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+                    fab.show();
+                }
+            }
+        });
+        // end test
 
         loadItems();
         // Log.d(TAG, "onViewCreated: loadItems()");
