@@ -196,11 +196,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         // return super.onOptionsItemSelected(item);
         // Handle item selection
         switch (item.getItemId()) {
-            // case R.id.about: {
-            //     Intent intent = new Intent(this, AboutActivity.class);
-            //     startActivity(intent);
-            //     return true;
-            // }
+            case R.id.about: {
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                return true;
+            }
             case R.id.logout: {
                 signOut();
                 return true;

@@ -37,4 +37,7 @@
     <string name="balance_expense_text">Расход</string>
     <string name="balance_income_text">Доход</string>
 
+    <string name="menu_about_title">О программе</string>
+    <string name="menu_logout_title">Выход</string>
+
 </resources>

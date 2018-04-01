@@ -26,6 +26,7 @@
             android:label="@string/add_item_title" />
         <!-- <activity android:name=".ItemListActivity" android:label="@string/add_item_list_title"/> -->
         <activity android:name=".AuthActivity" />
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>
