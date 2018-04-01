@@ -40,4 +40,6 @@
     <string name="menu_about_title">О программе</string>
     <string name="menu_logout_title">Выход</string>
 
+    <string name="about_name_format">%s:</string>
+
 </resources>

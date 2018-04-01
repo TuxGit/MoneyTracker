@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+static def getTimestamp() {
+    def date = new Date()
+    return date.format('yyyyMMdd.HHmm')
+}
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -7,7 +12,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -15,10 +20,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_BASE_URL", "\"http://android.loftschool.com/basic/v1/\""
+            buildConfigField("String", "BUILD_TIME", "\"${getTimestamp()}\"")
         }
 
         debug {
+            versionNameSuffix "-beta"
             buildConfigField "String", "API_BASE_URL", "\"http://android.loftschool.com/basic/v1/\""
+            buildConfigField("String", "BUILD_TIME", "\"${getTimestamp()}\"")
+            // resValue("string", "build_time", "${getTimestamp()}")
         }
     }
 }
