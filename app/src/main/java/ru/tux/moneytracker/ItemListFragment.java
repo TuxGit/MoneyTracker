@@ -1,6 +1,7 @@
 package ru.tux.moneytracker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,7 +44,8 @@ public class ItemListFragment extends Fragment {
 
     private SwipeRefreshLayout refresh;
 
-    private FloatingActionButton fab;
+    // private FloatingActionButton fab;
+    private OnRecyclerScrollListener frListener;
 
     private Api api;
 
@@ -99,8 +101,12 @@ public class ItemListFragment extends Fragment {
         });
 
         // test - work with FAB in child view
+        /*
+        // v1
         ViewGroup row = (ViewGroup) view.getParent().getParent();
         fab = row.findViewById(R.id.fab);
+        // v1.1
+        fab = getActivity().findViewById(R.id.fab);
 
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,6 +118,15 @@ public class ItemListFragment extends Fragment {
                 } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
                     fab.show();
                 }
+            }
+        });*/
+        // v2
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                frListener.onRecyclerScroll(dy);
             }
         });
         // end test
@@ -206,6 +221,31 @@ public class ItemListFragment extends Fragment {
             });
         }
     }
+
+    /*    ---     */
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnRecyclerScrollListener) {
+            frListener = (OnRecyclerScrollListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnRecyclerScrollListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        frListener = null;
+    }
+
+    public interface OnRecyclerScrollListener {
+        void onRecyclerScroll(int dy);
+    }
+
+    /*    ---     */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

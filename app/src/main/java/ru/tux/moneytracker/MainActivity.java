@@ -19,7 +19,7 @@ import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, ItemListFragment.OnRecyclerScrollListener {
     private static final String TAG = "MainActivity";
 
     private ViewPager viewPager;
@@ -107,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     protected void onResume() {
+        // Log.i(TAG, BuildConfig.BUILD_TIME);
+        // Log.i(TAG, getString(R.string.build_time));
+
         super.onResume();
 
         if (((App) getApplication()).isAuthorized()) {
@@ -226,5 +229,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //             startActivity(intent);
         //         }
         //     });
+    }
+
+    /*    IMPLEMENT FRAGMENT INTERFACE     */
+
+    @Override
+    public void onRecyclerScroll(int dy) {
+        if (dy > 0 && fab.getVisibility() == View.VISIBLE) {
+            fab.hide();
+        } else if (dy < 0 && fab.getVisibility() != View.VISIBLE) {
+            fab.show();
+        }
     }
 }
